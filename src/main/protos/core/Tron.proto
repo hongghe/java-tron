@@ -152,6 +152,9 @@ message Transaction {
       UnfreezeAssetContract = 14;
       UpdateAssetContract = 15;
       CustomContract = 20;
+      ContractCreationContract = 21;
+      ContractCallContract = 22;
+      GetContract = 23;
     }
     ContractType type = 1;
     google.protobuf.Any parameter = 2;
@@ -167,6 +170,7 @@ message Transaction {
     }
     int64 fee = 1;
     code ret = 2;
+    bytes constant_result = 3;
   }
 
   message raw {
@@ -323,4 +327,9 @@ message HelloMessage {
   BlockId genesisBlockId = 4;
   BlockId solidBlockId = 5;
   BlockId headBlockId = 6;
+}
+
+message StorageItem {
+  bytes contract_address = 1;
+  map<string, bytes> items = 2;
 }

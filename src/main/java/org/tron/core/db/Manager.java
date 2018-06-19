@@ -35,6 +35,7 @@ import org.spongycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tron.common.overlay.discover.node.Node;
+import org.tron.common.runtime.DepositController;
 import org.tron.common.utils.ByteArray;
 import org.tron.common.utils.DialogOptional;
 import org.tron.common.utils.Sha256Hash;
@@ -113,6 +114,12 @@ public class Manager {
   private TransactionHistoryStore transactionHistoryStore;
 
 
+  private CodeStore codeStore;
+
+  private ContractStore contractStore;
+
+  private StorageStore storageStore;
+
   // for network
   @Autowired
   private PeersStore peersStore;
@@ -168,6 +175,18 @@ public class Manager {
 
   public void setWitnessScheduleStore(final WitnessScheduleStore witnessScheduleStore) {
     this.witnessScheduleStore = witnessScheduleStore;
+  }
+
+  public StorageStore getStorageStore() {
+    return storageStore;
+  }
+
+  public CodeStore getCodeStore() {
+    return codeStore;
+  }
+
+  public ContractStore getContractStore() {
+    return contractStore;
   }
 
   public VotesStore getVotesStore() {
@@ -285,6 +304,11 @@ public class Manager {
 
     validateSignService = Executors
         .newFixedThreadPool(Args.getInstance().getValidateSignThreadNum());
+
+    this.codeStore = CodeStore.create("code");
+    this.contractStore = ContractStore.create("contract");
+    this.storageStore  = StorageStore.create("storage");
+    DepositController.create(this);
   }
 
   public BlockId getGenesisBlockId() {
